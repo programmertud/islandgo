@@ -6,6 +6,7 @@ import {
     LogOut, Settings, X, Building2
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
+import { avatarUrl as getAvatarUrl } from '../../lib/api';
 import ConfirmModal from '../ConfirmModal';
 
 interface NavItem {
@@ -36,7 +37,7 @@ export function Sidebar({ collapsed, onToggle, onClose, unreadCount }: SidebarPr
     const location = useLocation();
     const navigate = useNavigate();
     const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
-    const avatarUrl = user?.avatar ? (user.avatar.startsWith('http') ? user.avatar : `http://localhost:8000${user.avatar}`) : '';
+    const avatarUrl = getAvatarUrl(user?.avatar);
 
     const visibleItems = NAV_ITEMS.filter(item => item.roles.includes(user?.role ?? ''));
 

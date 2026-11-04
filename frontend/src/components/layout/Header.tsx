@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Menu, Bell, Search, Calendar } from 'lucide-react';
 import { Link } from 'react-router';
 import { useAuth } from '../../context/AuthContext';
+import { avatarUrl as getAvatarUrl } from '../../lib/api';
 
 interface HeaderProps { onMenuToggle: () => void; unreadCount: number; }
 
@@ -10,7 +11,7 @@ export function Header({ onMenuToggle, unreadCount }: HeaderProps) {
     const [now, setNow] = useState(() => new Date());
     useEffect(() => { const timer = window.setInterval(() => setNow(new Date()), 60_000); return () => window.clearInterval(timer); }, []);
     const updatedLabel = `Updated ${now.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })} · ${now.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })}`;
-    const avatarUrl = user?.avatar ? (user.avatar.startsWith('http') ? user.avatar : `http://localhost:8000${user.avatar}`) : '';
+    const avatarUrl = getAvatarUrl(user?.avatar);
 
     return <header className="h-20 bg-white border-b border-slate-100 flex items-center justify-between px-4 md:px-8 shrink-0">
         <div className="flex items-center gap-4 flex-1"><button onClick={onMenuToggle} className="lg:hidden p-2 rounded-xl text-slate-500 hover:bg-slate-100 transition-colors shrink-0"><Menu className="w-5 h-5" /></button><div className="hidden md:flex items-center relative w-full max-w-md"><Search className="w-4 h-4 text-slate-400 absolute left-4" /><input type="text" placeholder="Search bookings, customers, packages..." className="w-full pl-11 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-full text-sm focus:outline-none focus:bg-white focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all" /></div></div>

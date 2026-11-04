@@ -9,6 +9,7 @@ import {
 } from 'lucide-react';
 import { Link } from 'react-router';
 import { apiClient } from '../lib/axios';
+import { storageUrl } from '../lib/api';
 import { useAuth } from '../context/AuthContext';
 import { useDateRange } from '../context/DateRangeContext';
 import type { Booking } from '../types';
@@ -316,7 +317,7 @@ export default function Dashboard() {
                                             <CalendarCheck className="absolute inset-0 m-auto w-5 h-5 text-emerald-700/70" />
                                             {pkg.cover_image && (
                                                 <img
-                                                    src={`http://localhost:8000/storage/${pkg.cover_image}`}
+                                                    src={storageUrl(pkg.cover_image)}
                                                     alt={pkg.title}
                                                     className="absolute inset-0 h-full w-full object-cover"
                                                     onError={(event) => { event.currentTarget.style.display = 'none'; }}

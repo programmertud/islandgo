@@ -1,10 +1,7 @@
 import axios from 'axios';
 
-// In development (npm run dev at :5173):
-//   - Vite proxies /api → http://127.0.0.1:8000 so we use a relative path
-// In production (served from 127.0.0.1:8000 after npm run build):
-//   - The app is served from the same origin, so relative path still works perfectly
-const baseURL = '/api/v1';
+// Use VITE_API_URL in production (e.g. Render backend), or relative /api/v1 in development
+const baseURL = import.meta.env.VITE_API_URL || '/api/v1';
 
 export const apiClient = axios.create({
     baseURL,

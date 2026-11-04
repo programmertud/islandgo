@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { Camera, Loader2, Save, UserRound, QrCode, UploadCloud, Trash2, CheckCircle2 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
-import { authApi } from '../lib/api';
+import { authApi, storageUrl, avatarUrl as getAvatarUrl } from '../lib/api';
 import { apiClient } from '../lib/axios';
 
 export default function ProfileSettings() {
@@ -11,7 +11,7 @@ export default function ProfileSettings() {
     const [name, setName] = useState(user?.name ?? '');
     const [phone, setPhone] = useState(user?.phone ?? '');
     const [avatar, setAvatar] = useState<File | null>(null);
-    const [preview, setPreview] = useState(user?.avatar ? (user.avatar.startsWith('http') ? user.avatar : `http://localhost:8000${user.avatar}`) : '');
+    const [preview, setPreview] = useState(getAvatarUrl(user?.avatar));
     const [message, setMessage] = useState('');
     const [error, setError] = useState('');
     const [saving, setSaving] = useState(false);
@@ -32,7 +32,7 @@ export default function ProfileSettings() {
             if (response.data.payment_qr_code_url) {
                 setQrCodePreview(response.data.payment_qr_code_url);
             } else if (response.data.payment_qr_code_path) {
-                setQrCodePreview(response.data.payment_qr_code_path.startsWith('http') ? response.data.payment_qr_code_path : `http://localhost:8000/storage/${response.data.payment_qr_code_path}`);
+                setQrCodePreview(storageUrl(response.data.payment_qr_code_path));
             }
         }).catch(() => undefined);
     }, [user?.role]);
@@ -115,7 +115,7 @@ export default function ProfileSettings() {
             const response = await authApi.updateProfile(data);
             updateUser(response.data.user);
             setAvatar(null);
-            setPreview(response.data.user.avatar ? (response.data.user.avatar.startsWith('http') ? response.data.user.avatar : `http://localhost:8000${response.data.user.avatar}`) : '');
+            setPreview(getAvatarUrl(response.data.user.avatar));
             setMessage('Profile updated successfully.');
         } catch (err: any) {
             setError(err.response?.data?.message || 'Unable to update your profile.');

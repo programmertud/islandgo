@@ -3,6 +3,7 @@ import { Outlet, Navigate, Link, useLocation, useNavigate } from 'react-router';
 import { useQuery } from '@tanstack/react-query';
 import { useAuth } from '../context/AuthContext';
 import { apiClient } from '../lib/axios';
+import { avatarUrl as getAvatarUrl } from '../lib/api';
 import {
     LayoutDashboard, BookOpen, Package, Bell, ChevronLeft, ChevronRight,
     LogOut, X, Menu, Search, Compass, Settings
@@ -28,7 +29,7 @@ function CustomerSidebar({ collapsed, onToggle, onClose, unreadCount }: any) {
     const location = useLocation();
     const navigate = useNavigate();
     const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
-    const avatarUrl = user?.avatar ? (user.avatar.startsWith('http') ? user.avatar : `http://localhost:8000${user.avatar}`) : '';
+    const avatarUrl = getAvatarUrl(user?.avatar);
 
     const handleLogout = async () => {
         await logout();
@@ -135,7 +136,7 @@ function CustomerSidebar({ collapsed, onToggle, onClose, unreadCount }: any) {
 // --- Header ---
 function CustomerHeader({ onMenuToggle, unreadCount }: any) {
     const { user } = useAuth();
-    const avatarUrl = user?.avatar ? (user.avatar.startsWith('http') ? user.avatar : `http://localhost:8000${user.avatar}`) : '';
+    const avatarUrl = getAvatarUrl(user?.avatar);
     return (
         <header className="h-20 bg-white border-b border-slate-100 flex items-center justify-between px-4 md:px-8 shrink-0">
             <div className="flex items-center gap-4 flex-1">

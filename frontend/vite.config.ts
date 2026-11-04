@@ -6,8 +6,7 @@ import tailwindcss from '@tailwindcss/vite'
 export default defineConfig({
   plugins: [react(), tailwindcss()],
   build: {
-    // Output directly into Laravel's public folder
-    outDir: new URL('../backend/public/app', import.meta.url).pathname.slice(1), // removes leading /
+    outDir: 'dist',
     emptyOutDir: true,
   },
   server: {

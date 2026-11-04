@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Compass, Map, Users, Search, Package } from 'lucide-react';
 import { Link } from 'react-router';
-import { toursApi } from '../lib/api';
+import { toursApi, storageUrl } from '../lib/api';
 import type { TourPackage, PaginatedResponse } from '../types';
 
 export default function CustomerPackages() {
@@ -69,7 +69,7 @@ export default function CustomerPackages() {
                         <Link key={tour.id} to={`/customer/packages/${tour.id}`} className="group bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-md transition-all flex flex-col h-full transform hover:-translate-y-0.5">
                             <div className="relative h-36 bg-slate-100 overflow-hidden shrink-0">
                                 {tour.cover_image ? (
-                                    <img src={`http://localhost:8000/storage/${tour.cover_image}`} alt={tour.title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+                                    <img src={storageUrl(tour.cover_image)} alt={tour.title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
                                 ) : (
                                     <div className="w-full h-full flex items-center justify-center bg-slate-50">
                                         <Map className="w-10 h-10 text-slate-300" />

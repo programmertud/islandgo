@@ -9,6 +9,7 @@ import {
     CreditCard, CheckSquare
 } from 'lucide-react';
 import { apiClient } from '../lib/axios';
+import { storageUrl } from '../lib/api';
 import { useAuth } from '../context/AuthContext';
 import type { Booking, PaginatedResponse } from '../types';
 import ConfirmModal from '../components/ConfirmModal';
@@ -762,13 +763,13 @@ export default function Bookings() {
                                                     <div className="p-4 flex flex-col sm:flex-row items-center gap-4">
                                                         {p.proof_of_payment_path ? (
                                                             <a
-                                                                href={`http://localhost:8000/storage/${p.proof_of_payment_path}`}
+                                                                href={storageUrl(p.proof_of_payment_path)}
                                                                 target="_blank"
                                                                 rel="noopener noreferrer"
                                                                 className="relative group block rounded-xl overflow-hidden border border-slate-200 bg-slate-100 shrink-0"
                                                             >
                                                                 <img
-                                                                    src={`http://localhost:8000/storage/${p.proof_of_payment_path}`}
+                                                                    src={storageUrl(p.proof_of_payment_path)}
                                                                     alt="Payment proof"
                                                                     className="w-40 h-28 object-contain"
                                                                     onError={e => { (e.target as HTMLImageElement).style.display = 'none'; }}
@@ -1014,13 +1015,13 @@ export default function Bookings() {
                                             {/* Receipt image / link */}
                                             {p.proof_of_payment_path ? (
                                                 <a
-                                                    href={`http://localhost:8000/storage/${p.proof_of_payment_path}`}
+                                                    href={storageUrl(p.proof_of_payment_path)}
                                                     target="_blank"
                                                     rel="noopener noreferrer"
                                                     className="block group relative"
                                                 >
                                                     <img
-                                                        src={`http://localhost:8000/storage/${p.proof_of_payment_path}`}
+                                                        src={storageUrl(p.proof_of_payment_path)}
                                                         alt="Payment receipt"
                                                         className="w-full max-h-64 object-contain bg-slate-100"
                                                         onError={e => { (e.target as HTMLImageElement).style.display = 'none'; }}

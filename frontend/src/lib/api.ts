@@ -113,6 +113,8 @@ export const FALLBACK_ISLAND_IMAGES = [
     'https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&w=1200&q=80', // Coral Reef & Snorkeling Island Waters
 ];
 
+const backendBase = import.meta.env.VITE_BACKEND_URL || '';
+
 export function storageUrl(path: string | null | undefined, fallbackIndex = 0): string {
     if (!path || typeof path !== 'string' || path.trim() === '') {
         return FALLBACK_ISLAND_IMAGES[Math.abs(fallbackIndex) % FALLBACK_ISLAND_IMAGES.length];
@@ -121,8 +123,13 @@ export function storageUrl(path: string | null | undefined, fallbackIndex = 0): 
         return path;
     }
     const clean = path.replace(/^\/+/, '');
-    if (clean.startsWith('storage/')) {
-        return `/${clean}`;
-    }
-    return `/storage/${clean}`;
+    const relative = clean.startsWith('storage/') ? `/${clean}` : `/storage/${clean}`;
+    return backendBase ? `${backendBase.replace(/\/+$/, '')}${relative}` : relative;
+}
+
+export function avatarUrl(avatar: string | null | undefined): string {
+    if (!avatar || typeof avatar !== 'string' || avatar.trim() === '') return '';
+    if (avatar.startsWith('http://') || avatar.startsWith('https://')) return avatar;
+    const clean = avatar.startsWith('/') ? avatar : `/${avatar}`;
+    return backendBase ? `${backendBase.replace(/\/+$/, '')}${clean}` : clean;
 }

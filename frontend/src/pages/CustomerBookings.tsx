@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { customerApi } from '../lib/api';
+import { customerApi, storageUrl } from '../lib/api';
 import type { Booking, PaginatedResponse } from '../types';
 import { Map, Calendar, Clock, Loader2, X, Upload, ArrowRight, Compass, PackageOpen, ShieldCheck, Headphones, Heart, MapPinned, Palmtree, Copy, Check, FileText, Trash2, MapPin, QrCode } from 'lucide-react';
 import { Link } from 'react-router';
@@ -58,7 +58,7 @@ const BookingCard = ({ booking, onPay, onDelete, deleting, onViewMap }: { bookin
             {/* Image Section */}
             <div className="relative h-44 shrink-0 overflow-hidden bg-slate-100 sm:h-52">
                 {tour?.cover_image ? (
-                    <img src={`http://localhost:8000/storage/${tour.cover_image}`} alt={tour.title} className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
+                    <img src={storageUrl(tour.cover_image)} alt={tour.title} className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
                 ) : (
                     <div className="w-full h-full flex items-center justify-center text-slate-300">
                         <Map className="w-8 h-8" />
