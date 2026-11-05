@@ -45,8 +45,10 @@ class BrevoTransport extends AbstractTransport
             $payload['textContent'] = $email->getTextBody();
         }
 
+        $key = trim(trim($this->apiKey), "\"' \t\n\r\0\x0B");
+
         $response = Http::withHeaders([
-            'api-key'      => $this->apiKey,
+            'api-key'      => $key,
             'Content-Type' => 'application/json',
             'Accept'       => 'application/json',
         ])->timeout(15)->post('https://api.brevo.com/v3/smtp/email', $payload);
