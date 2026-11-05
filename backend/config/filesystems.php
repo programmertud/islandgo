@@ -38,7 +38,18 @@ return [
             'report' => false,
         ],
 
-        'public' => [
+        'public' => env('FILESYSTEM_DISK') === 's3' ? [
+            'driver' => 's3',
+            'key' => env('AWS_ACCESS_KEY_ID'),
+            'secret' => env('AWS_SECRET_ACCESS_KEY'),
+            'region' => env('AWS_DEFAULT_REGION', 'ap-northeast-2'),
+            'bucket' => env('AWS_BUCKET', 'islandgo'),
+            'url' => env('AWS_URL', env('AWS_ENDPOINT') ? str_replace('/storage/v1/s3', '/storage/v1/object/public/' . env('AWS_BUCKET', 'islandgo'), env('AWS_ENDPOINT')) : null),
+            'endpoint' => env('AWS_ENDPOINT'),
+            'use_path_style_endpoint' => env('AWS_USE_PATH_STYLE_ENDPOINT', true),
+            'throw' => false,
+            'report' => false,
+        ] : [
             'driver' => 'local',
             'root' => storage_path('app/public'),
             'url' => rtrim(env('APP_URL', 'http://localhost'), '/').'/storage',
@@ -53,7 +64,7 @@ return [
             'secret' => env('AWS_SECRET_ACCESS_KEY'),
             'region' => env('AWS_DEFAULT_REGION'),
             'bucket' => env('AWS_BUCKET'),
-            'url' => env('AWS_URL'),
+            'url' => env('AWS_URL', env('AWS_ENDPOINT') ? str_replace('/storage/v1/s3', '/storage/v1/object/public/' . env('AWS_BUCKET', 'islandgo'), env('AWS_ENDPOINT')) : null),
             'endpoint' => env('AWS_ENDPOINT'),
             'use_path_style_endpoint' => env('AWS_USE_PATH_STYLE_ENDPOINT', false),
             'throw' => false,

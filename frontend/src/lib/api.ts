@@ -114,6 +114,7 @@ export const FALLBACK_ISLAND_IMAGES = [
 ];
 
 const backendBase = import.meta.env.VITE_BACKEND_URL || '';
+const supabaseStorageBase = import.meta.env.VITE_SUPABASE_STORAGE_URL || 'https://dozhtzetsefxmyytwzmw.supabase.co/storage/v1/object/public/islandgo';
 
 export function storageUrl(path: string | null | undefined, fallbackIndex = 0): string {
     if (!path || typeof path !== 'string' || path.trim() === '') {
@@ -122,14 +123,19 @@ export function storageUrl(path: string | null | undefined, fallbackIndex = 0): 
     if (path.startsWith('http://') || path.startsWith('https://')) {
         return path;
     }
-    const clean = path.replace(/^\/+/, '');
-    const relative = clean.startsWith('storage/') ? `/${clean}` : `/storage/${clean}`;
-    return backendBase ? `${backendBase.replace(/\/+$/, '')}${relative}` : relative;
+    const clean = path.replace(/^\/+/, '').replace(/^storage\//, '');
+    if (backendBase) {
+        return `${supabaseStorageBase.replace(/\/+$/, '')}/${clean}`;
+    }
+    return `/storage/${clean}`;
 }
 
 export function avatarUrl(avatar: string | null | undefined): string {
     if (!avatar || typeof avatar !== 'string' || avatar.trim() === '') return '';
     if (avatar.startsWith('http://') || avatar.startsWith('https://')) return avatar;
-    const clean = avatar.startsWith('/') ? avatar : `/${avatar}`;
-    return backendBase ? `${backendBase.replace(/\/+$/, '')}${clean}` : clean;
+    const clean = avatar.replace(/^\/+/, '').replace(/^storage\//, '');
+    if (backendBase) {
+        return `${supabaseStorageBase.replace(/\/+$/, '')}/${clean}`;
+    }
+    return `/${clean}`;
 }

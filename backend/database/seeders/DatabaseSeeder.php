@@ -16,6 +16,11 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
+        // Skip seeding if data already exists (safe for re-deployments)
+        if (User::where('email', 'admin@test.com')->exists()) {
+            return;
+        }
+
         // ── Super Admin ───────────────────────────────────────────
         User::create([
             'name'     => 'Super Admin',
@@ -75,6 +80,7 @@ class DatabaseSeeder extends Seeder
         ]);
 
         // ── Tour Packages (Agency 1) ───────────────────────────────
+        // Using Unsplash URLs for cover images so they display without file uploads
         $pkg1 = TourPackage::create([
             'agency_id'        => $agency1->id,
             'title'            => 'Palawan Island Hopping',
@@ -89,7 +95,7 @@ class DatabaseSeeder extends Seeder
             'inclusions'       => ['Island hopping boat', 'Environmental fee', 'Life jacket', 'Lunch on Day 1'],
             'exclusions'       => ['Airfare', 'Hotel accommodation', 'Personal expenses'],
             'meeting_point'    => 'Port Barton, Palawan',
-            'cover_image'      => 'tour-images/ear5t7eQMuEVGZC42JxdgNTIWPmTwl6S8XKr3lGJ.jpg',
+            'cover_image'      => 'https://images.unsplash.com/photo-1518509562904-e7ef99cdcc86?auto=format&fit=crop&w=1200&q=80',
             'status'           => 'published',
         ]);
 
@@ -105,7 +111,7 @@ class DatabaseSeeder extends Seeder
             'min_participants' => 2,
             'max_participants' => 10,
             'inclusions'       => ['Dive equipment', 'Dive instructor', 'Boat transfer', 'Meals'],
-            'cover_image'      => 'tour-images/EHYzjqcUf9Jz3OjyOpgUKdwY1IVSCNyLgFbkkc7T.png',
+            'cover_image'      => 'https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&w=1200&q=80',
             'status'           => 'published',
         ]);
 
@@ -119,7 +125,7 @@ class DatabaseSeeder extends Seeder
             'duration_days'    => 1,
             'min_participants' => 2,
             'max_participants' => 15,
-            'cover_image'      => 'tour-images/CGp3xBFTaHiuZdR7xrH5OdzO6eqSlEX554b83vgs.jpg',
+            'cover_image'      => 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1200&q=80',
             'status'           => 'published',
         ]);
 

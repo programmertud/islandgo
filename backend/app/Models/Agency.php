@@ -42,7 +42,7 @@ class Agency extends Model
             return $this->payment_qr_code_path;
         }
 
-        return asset('storage/' . $this->payment_qr_code_path);
+        return \Illuminate\Support\Facades\Storage::disk('public')->url($this->payment_qr_code_path);
     }
 
     public function users()
