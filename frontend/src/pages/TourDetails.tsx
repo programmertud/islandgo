@@ -546,7 +546,7 @@ export default function TourDetails() {
                                     </div>
                                 </div>
 
-                                <div className="mb-5">
+                                <div id="booking-calendar-widget" className="mb-5 scroll-mt-24">
                                     <label className="mb-2 block text-xs font-bold uppercase tracking-wider text-slate-700">Select Travel Date</label>
                                     <BookingCalendar packageId={tour.id} schedules={schedules} selectedId={selectedSchedule?.id} selectedDate={selectedSchedule?.departure_date} onSelect={schedule => {
                                         setSelectedSchedule(schedule);
@@ -664,15 +664,20 @@ export default function TourDetails() {
                 </div>
                 <button
                     type="button"
-                    disabled={!canBookSelected}
                     onClick={() => {
                         if (selectedSchedule && canBookSelected) {
                             setIsBookingModalOpen(true);
+                        } else {
+                            document.getElementById('booking-calendar-widget')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
                         }
                     }}
-                    className="px-5 py-2.5 bg-slate-900 hover:bg-slate-800 disabled:bg-slate-200 disabled:text-slate-400 text-white font-bold text-xs rounded-xl shadow-sm transition-all"
+                    className={`px-5 py-2.5 font-bold text-xs rounded-xl shadow-sm transition-all ${
+                        canBookSelected
+                            ? 'bg-sky-600 hover:bg-sky-700 active:scale-95 text-white shadow-sky-600/20'
+                            : 'bg-slate-900 hover:bg-slate-800 text-white'
+                    }`}
                 >
-                    {canBookSelected ? 'Book Now' : 'Check Dates'}
+                    {canBookSelected ? 'Book Now' : 'Select Date & Book'}
                 </button>
             </div>
 

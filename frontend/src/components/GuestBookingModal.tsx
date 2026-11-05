@@ -185,7 +185,7 @@ export default function GuestBookingModal({ tour, schedule, initialParticipants 
 
     return (
         <div
-            className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-fade-in"
+            className="fixed inset-0 z-[100] flex items-center justify-center p-3 sm:p-4 bg-black/50 backdrop-blur-sm animate-fade-in"
             role="dialog"
             aria-modal="true"
             aria-labelledby="guest-booking-title"
@@ -194,21 +194,21 @@ export default function GuestBookingModal({ tour, schedule, initialParticipants 
             <div
                 ref={panelRef}
                 onKeyDown={handleKeyDown}
-                className="bg-white rounded-3xl w-full max-w-lg shadow-2xl max-h-[92vh] flex flex-col overflow-hidden animate-modal-in"
+                className="bg-white rounded-2xl sm:rounded-3xl w-full max-w-lg shadow-2xl max-h-[95vh] sm:max-h-[92vh] flex flex-col overflow-hidden animate-modal-in"
                 onClick={e => e.stopPropagation()}
             >
                 {/* ── Header ───────────────────────────────────────────── */}
-                <div className="px-6 py-5 border-b border-slate-100 flex items-start justify-between gap-4 shrink-0">
+                <div className="px-5 sm:px-6 py-4 sm:py-5 border-b border-slate-100 flex items-start justify-between gap-4 shrink-0">
                     <div>
-                        <h2 id="guest-booking-title" className="text-lg font-extrabold text-slate-900">
+                        <h2 id="guest-booking-title" className="text-base sm:text-lg font-extrabold text-slate-900 leading-tight">
                             {step === 'success' ? 'Booking Confirmed!' : 'Book This Tour'}
                         </h2>
-                        <p className="text-sm text-slate-500 mt-0.5">{tour.title}</p>
+                        <p className="text-xs sm:text-sm text-slate-500 mt-0.5">{tour.title}</p>
                     </div>
                     <button
                         ref={closeButtonRef}
                         onClick={onClose}
-                        className="text-slate-400 hover:text-slate-600 p-1 rounded-lg hover:bg-slate-100 transition-colors shrink-0"
+                        className="text-slate-400 hover:text-slate-600 p-1.5 rounded-lg hover:bg-slate-100 transition-colors shrink-0"
                         aria-label="Close booking modal"
                     >
                         <X className="w-5 h-5" aria-hidden="true" />
@@ -218,7 +218,7 @@ export default function GuestBookingModal({ tour, schedule, initialParticipants 
                 <div className="overflow-y-auto flex-1">
                     {step === 'form' ? (
                         /* ── Step 1: Form ──────────────────────────────── */
-                        <form onSubmit={handleSubmit(onSubmit)} noValidate className="p-6 space-y-5">
+                        <form onSubmit={handleSubmit(onSubmit)} noValidate className="p-4 sm:p-6 space-y-4 sm:space-y-5">
                             {/* Schedule summary */}
                             <div className="bg-sky-50 border border-sky-100 rounded-2xl p-4 space-y-2">
                                 <p className="text-xs font-bold uppercase tracking-wider text-sky-700 mb-2">Selected Schedule</p>

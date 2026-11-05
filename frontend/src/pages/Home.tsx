@@ -256,7 +256,7 @@ export default function Home() {
                     </Reveal>
 
                     <Reveal variant="fade-up" delay={200}>
-                        <h1 className="text-5xl md:text-7xl lg:text-8xl font-black tracking-tight leading-[1.0] mb-6 text-white drop-shadow-xl">
+                        <h1 className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black tracking-tight leading-[1.0] mb-6 text-white drop-shadow-xl">
                             Discover
                             <span
                                 className="block"

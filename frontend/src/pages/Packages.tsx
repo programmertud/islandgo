@@ -70,28 +70,28 @@ export default function Packages() {
     };
 
     return (
-        <div className="p-6 md:p-8 max-w-[1600px] mx-auto space-y-6">
+        <div className="p-4 sm:p-6 md:p-8 max-w-[1600px] mx-auto space-y-6">
             {/* Header */}
-            <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
+            <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
                 <div>
                     <p className="text-slate-500 text-sm font-medium mb-1">Agency</p>
-                    <h1 className="text-3xl font-bold text-slate-800 tracking-tight">Tour Packages</h1>
-                    <p className="text-slate-500 mt-1">Manage your agency's tour offerings and itineraries.</p>
+                    <h1 className="text-2xl sm:text-3xl font-bold text-slate-800 tracking-tight">Tour Packages</h1>
+                    <p className="text-slate-500 text-sm mt-1">Manage your agency's tour offerings and itineraries.</p>
                 </div>
-                <div className="flex items-center gap-3">
-                    <div className="relative">
+                <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full sm:w-auto">
+                    <div className="relative flex-1 sm:flex-initial">
                         <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
                         <input
                             type="text"
                             placeholder="Search packages..."
                             value={search}
                             onChange={e => setSearch(e.target.value)}
-                            className="pl-9 pr-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 w-60 shadow-sm"
+                            className="w-full sm:w-60 pl-9 pr-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 shadow-sm"
                         />
                     </div>
                     <button
                         onClick={() => { setEditingPackage(null); setIsModalOpen(true); }}
-                        className="flex items-center gap-2 px-5 py-2.5 bg-emerald-600 text-white text-sm font-bold rounded-xl hover:bg-emerald-700 transition-colors shadow-sm"
+                        className="flex items-center justify-center gap-2 px-5 py-2.5 bg-emerald-600 text-white text-sm font-bold rounded-xl hover:bg-emerald-700 transition-colors shadow-sm shrink-0"
                     >
                         <Plus className="w-4 h-4" /> Create Package
                     </button>
@@ -160,25 +160,25 @@ export default function Packages() {
                                     ₱{Number(pkg.price_per_person).toLocaleString()}
                                     <span className="text-xs font-normal text-white/70 ml-1">/ pax</span>
                                 </div>
-                                {/* Action Buttons - show on hover */}
-                                <div className="absolute top-3 right-3 flex gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity">
+                                {/* Action Buttons - visible on mobile/touch, hover on desktop */}
+                                <div className="absolute top-3 right-3 flex gap-1.5 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity">
                                     <button
                                         onClick={() => setManagingSchedulesFor(pkg)}
-                                        className="p-2 bg-white/90 backdrop-blur-sm text-slate-700 rounded-lg hover:bg-white hover:text-blue-600 transition-colors shadow-sm"
+                                        className="p-2 bg-white/95 backdrop-blur-sm text-slate-700 rounded-lg hover:bg-white hover:text-blue-600 transition-colors shadow-sm"
                                         title="Manage Schedules"
                                     >
                                         <CalendarDays className="w-4 h-4" />
                                     </button>
                                     <button
                                         onClick={() => { setEditingPackage(pkg); setIsModalOpen(true); }}
-                                        className="p-2 bg-white/90 backdrop-blur-sm text-slate-700 rounded-lg hover:bg-white hover:text-emerald-600 transition-colors shadow-sm"
+                                        className="p-2 bg-white/95 backdrop-blur-sm text-slate-700 rounded-lg hover:bg-white hover:text-emerald-600 transition-colors shadow-sm"
                                         title="Edit Package"
                                     >
                                         <Edit2 className="w-4 h-4" />
                                     </button>
                                     <button
                                         onClick={() => handleDelete(pkg)}
-                                        className="p-2 bg-white/90 backdrop-blur-sm text-slate-700 rounded-lg hover:bg-white hover:text-red-600 transition-colors shadow-sm"
+                                        className="p-2 bg-white/95 backdrop-blur-sm text-slate-700 rounded-lg hover:bg-white hover:text-red-600 transition-colors shadow-sm"
                                         title="Delete"
                                     >
                                         <Trash2 className="w-4 h-4" />
@@ -392,10 +392,10 @@ function PackageModal({ onClose, pkg }: { onClose: () => void; pkg: TourPackage 
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
             <div className="bg-white rounded-2xl shadow-2xl w-full max-w-4xl overflow-hidden flex flex-col max-h-[92vh]">
                 {/* Header */}
-                <div className="px-7 py-5 border-b border-slate-100 flex items-center justify-between">
+                <div className="px-5 sm:px-7 py-4 sm:py-5 border-b border-slate-100 flex items-center justify-between">
                     <div>
-                        <h2 className="text-xl font-bold text-slate-800">{isEdit ? 'Edit Package' : 'Create New Package'}</h2>
-                        <p className="text-sm text-slate-500 mt-0.5">{isEdit ? `Editing: ${pkg?.title}` : 'Fill in the details for your new tour package.'}</p>
+                        <h2 className="text-lg sm:text-xl font-bold text-slate-800">{isEdit ? 'Edit Package' : 'Create New Package'}</h2>
+                        <p className="text-xs sm:text-sm text-slate-500 mt-0.5">{isEdit ? `Editing: ${pkg?.title}` : 'Fill in the details for your new tour package.'}</p>
                     </div>
                     <button onClick={onClose} className="p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-lg transition-colors">
                         <X className="w-5 h-5" />
@@ -403,7 +403,7 @@ function PackageModal({ onClose, pkg }: { onClose: () => void; pkg: TourPackage 
                 </div>
 
                 {/* Form Body */}
-                <div className="flex-1 overflow-y-auto p-7">
+                <div className="flex-1 overflow-y-auto p-4 sm:p-7">
                     <form id="packageForm" onSubmit={handleSubmit(onSubmit)} className="space-y-8">
                         {/* Section 1: Basic + Logistics */}
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -645,13 +645,13 @@ function PackageModal({ onClose, pkg }: { onClose: () => void; pkg: TourPackage 
                 </div>
 
                 {/* Footer */}
-                <div className="px-7 py-4 border-t border-slate-100 bg-slate-50/50 flex items-center justify-end gap-3">
+                <div className="px-5 sm:px-7 py-3 sm:py-4 border-t border-slate-100 bg-slate-50/50 flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-end gap-2 sm:gap-3">
                     <button type="button" onClick={onClose}
-                        className="px-5 py-2.5 bg-white border border-slate-200 text-slate-700 text-sm font-semibold rounded-xl hover:bg-slate-50 transition-colors">
+                        className="px-5 py-2.5 bg-white border border-slate-200 text-slate-700 text-sm font-semibold rounded-xl hover:bg-slate-50 transition-colors text-center">
                         Cancel
                     </button>
                     <button type="submit" form="packageForm" disabled={isSubmitting || mutation.isPending}
-                        className="flex items-center gap-2 px-6 py-2.5 bg-emerald-600 text-white text-sm font-bold rounded-xl hover:bg-emerald-700 transition-colors disabled:opacity-60">
+                        className="flex items-center justify-center gap-2 px-6 py-2.5 bg-emerald-600 text-white text-sm font-bold rounded-xl hover:bg-emerald-700 transition-colors disabled:opacity-60">
                         {(isSubmitting || mutation.isPending) && <Loader2 className="w-4 h-4 animate-spin" />}
                         {isEdit ? 'Save Changes' : 'Create Package'}
                     </button>
@@ -803,15 +803,15 @@ function ScheduleModal({ onClose, pkg }: { onClose: () => void; pkg: TourPackage
         <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/60 backdrop-blur-sm">
             <div className="bg-white rounded-2xl shadow-2xl w-full max-w-4xl overflow-hidden flex flex-col max-h-[92vh]">
                 {/* Header */}
-                <div className="px-6 py-5 border-b border-slate-100 flex items-center justify-between">
+                <div className="px-5 sm:px-6 py-4 sm:py-5 border-b border-slate-100 flex items-center justify-between">
                     <div>
                         <div className="flex items-center gap-2.5">
-                            <h2 className="text-xl font-bold text-slate-800">Booking Calendar &amp; Schedules</h2>
+                            <h2 className="text-lg sm:text-xl font-bold text-slate-800">Booking Calendar &amp; Schedules</h2>
                             <span className={`px-2 py-0.5 text-xs font-bold rounded-full capitalize shadow-xs ${STATUS_STYLES[pkg.status] ?? 'bg-slate-100 text-slate-600'}`}>
                                 {pkg.status}
                             </span>
                         </div>
-                        <p className="text-sm text-slate-500 mt-0.5">{pkg.title} &bull; {pkg.destination}</p>
+                        <p className="text-xs sm:text-sm text-slate-500 mt-0.5">{pkg.title} &bull; {pkg.destination}</p>
                     </div>
                     <button onClick={onClose} className="p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-lg transition-colors">
                         <X className="w-5 h-5" />
@@ -819,39 +819,39 @@ function ScheduleModal({ onClose, pkg }: { onClose: () => void; pkg: TourPackage
                 </div>
 
                 {/* Navigation Tabs */}
-                <div className="flex border-b border-slate-200 px-6 gap-2 bg-slate-50/50">
+                <div className="flex overflow-x-auto border-b border-slate-200 px-4 sm:px-6 gap-2 bg-slate-50/50">
                     <button
                         type="button"
                         onClick={() => setActiveTab('calendar')}
-                        className={`py-3.5 px-4 text-sm font-semibold border-b-2 -mb-px flex items-center gap-2 transition-colors ${
+                        className={`py-3.5 px-3 sm:px-4 text-xs sm:text-sm font-semibold border-b-2 -mb-px flex items-center gap-2 transition-colors whitespace-nowrap shrink-0 ${
                             activeTab === 'calendar'
                                 ? 'border-sky-600 text-sky-700 bg-white'
                                 : 'border-transparent text-slate-500 hover:text-slate-700'
                         }`}
                     >
-                        <Calendar className="w-4 h-4" /> Monthly Calendar Overview
+                        <Calendar className="w-4 h-4 shrink-0" /> Monthly Calendar Overview
                     </button>
                     <button
                         type="button"
                         onClick={() => setActiveTab('schedules')}
-                        className={`py-3.5 px-4 text-sm font-semibold border-b-2 -mb-px flex items-center gap-2 transition-colors ${
+                        className={`py-3.5 px-3 sm:px-4 text-xs sm:text-sm font-semibold border-b-2 -mb-px flex items-center gap-2 transition-colors whitespace-nowrap shrink-0 ${
                             activeTab === 'schedules'
                                 ? 'border-emerald-600 text-emerald-700 bg-white'
                                 : 'border-transparent text-slate-500 hover:text-slate-700'
                         }`}
                     >
-                        <CalendarDays className="w-4 h-4" /> Departure Schedules ({schedules?.length || 0})
+                        <CalendarDays className="w-4 h-4 shrink-0" /> Departure Schedules ({schedules?.length || 0})
                     </button>
                     <button
                         type="button"
                         onClick={() => setActiveTab('closures')}
-                        className={`py-3.5 px-4 text-sm font-semibold border-b-2 -mb-px flex items-center gap-2 transition-colors ${
+                        className={`py-3.5 px-3 sm:px-4 text-xs sm:text-sm font-semibold border-b-2 -mb-px flex items-center gap-2 transition-colors whitespace-nowrap shrink-0 ${
                             activeTab === 'closures'
                                 ? 'border-rose-600 text-rose-700 bg-white'
                                 : 'border-transparent text-slate-500 hover:text-slate-700'
                         }`}
                     >
-                        <Ban className="w-4 h-4" /> Block Dates / Closures ({closures?.length || 0})
+                        <Ban className="w-4 h-4 shrink-0" /> Block Dates / Closures ({closures?.length || 0})
                     </button>
                 </div>
 

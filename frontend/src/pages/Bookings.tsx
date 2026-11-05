@@ -208,7 +208,7 @@ export default function Bookings() {
     };
 
     return (
-        <div className="p-6 md:p-8 max-w-[1650px] mx-auto space-y-6">
+        <div className="p-4 sm:p-6 md:p-8 max-w-[1650px] mx-auto space-y-6">
             {/* Page Header */}
             <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
                 <div>
@@ -218,9 +218,9 @@ export default function Bookings() {
                         Review customer reservations, verify payment receipts, check tour schedules, and confirm bookings.
                     </p>
                 </div>
-                <div className="flex flex-wrap items-center gap-3">
+                <div className="flex flex-col sm:flex-row flex-wrap items-stretch sm:items-center gap-2.5 sm:gap-3 w-full lg:w-auto">
                     {/* View Switcher */}
-                    <div className="flex items-center gap-1 bg-white border border-slate-200 rounded-xl p-1 shadow-sm">
+                    <div className="flex items-center justify-center gap-1 bg-white border border-slate-200 rounded-xl p-1 shadow-sm shrink-0">
                         <button
                             type="button"
                             onClick={() => setViewMode('table')}
@@ -245,20 +245,20 @@ export default function Bookings() {
                         </button>
                     </div>
 
-                    <div className="relative">
+                    <div className="relative flex-1 sm:flex-initial">
                         <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
                         <input
                             type="text"
                             placeholder="Search ref, customer, email..."
                             value={search}
                             onChange={e => { setSearch(e.target.value); setPage(1); }}
-                            className="pl-9 pr-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500 w-64 shadow-sm"
+                            className="w-full sm:w-60 md:w-64 pl-9 pr-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500 shadow-sm"
                         />
                     </div>
                     <select
                         value={statusFilter}
                         onChange={e => { setStatusFilter(e.target.value); setPage(1); }}
-                        className="px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500 shadow-sm font-medium text-slate-700"
+                        className="w-full sm:w-auto px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500 shadow-sm font-medium text-slate-700"
                     >
                         <option value="">All Statuses</option>
                         <option value="pending">Pending Review</option>
@@ -588,31 +588,31 @@ export default function Bookings() {
                     : '—';
 
                 return (
-                    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/65 backdrop-blur-sm animate-in fade-in duration-150">
-                        <div className="bg-white rounded-3xl shadow-2xl w-full max-w-3xl overflow-hidden flex flex-col max-h-[92vh] border border-slate-200">
+                    <div className="fixed inset-0 z-50 flex items-center justify-center p-2.5 sm:p-4 bg-slate-950/65 backdrop-blur-sm animate-in fade-in duration-150">
+                        <div className="bg-white rounded-2xl sm:rounded-3xl shadow-2xl w-full max-w-3xl overflow-hidden flex flex-col max-h-[95vh] sm:max-h-[92vh] border border-slate-200">
                             {/* Modal Header */}
-                            <div className="px-6 py-4 border-b border-slate-100 flex items-center justify-between bg-gradient-to-r from-slate-50 via-white to-sky-50/40">
-                                <div className="flex items-center gap-3">
-                                    <div className="w-10 h-10 rounded-2xl bg-sky-600 text-white flex items-center justify-center font-bold shadow-xs">
-                                        <CheckSquare className="w-5 h-5" />
+                            <div className="px-4 sm:px-6 py-3 sm:py-4 border-b border-slate-100 flex items-center justify-between bg-gradient-to-r from-slate-50 via-white to-sky-50/40">
+                                <div className="flex items-center gap-2.5 sm:gap-3 min-w-0">
+                                    <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl sm:rounded-2xl bg-sky-600 text-white flex items-center justify-center font-bold shadow-xs shrink-0">
+                                        <CheckSquare className="w-4 h-4 sm:w-5 sm:h-5" />
                                     </div>
-                                    <div>
-                                        <div className="flex items-center gap-2">
-                                            <h2 className="text-lg font-black text-slate-900">Review Booking</h2>
-                                            <span className="font-mono text-xs font-bold bg-slate-100 text-slate-800 px-2 py-0.5 rounded border border-slate-200">
+                                    <div className="min-w-0">
+                                        <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap">
+                                            <h2 className="text-base sm:text-lg font-black text-slate-900 leading-tight">Review Booking</h2>
+                                            <span className="font-mono text-[10px] sm:text-xs font-bold bg-slate-100 text-slate-800 px-1.5 sm:px-2 py-0.5 rounded border border-slate-200">
                                                 {b.booking_reference}
                                             </span>
                                         </div>
-                                        <p className="text-xs text-slate-500 mt-0.5">
+                                        <p className="text-[11px] sm:text-xs text-slate-500 mt-0.5 truncate">
                                             Submitted on {bookedOnTime}
                                         </p>
                                     </div>
                                 </div>
-                                <div className="flex items-center gap-2">
+                                <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
                                     <StatusBadge status={b.booking_status} />
                                     <button
                                         onClick={() => setSelectedBooking(null)}
-                                        className="p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-xl transition-colors"
+                                        className="p-1.5 sm:p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-xl transition-colors"
                                     >
                                         <X className="w-5 h-5" />
                                     </button>
@@ -620,7 +620,7 @@ export default function Bookings() {
                             </div>
 
                             {/* Modal Body */}
-                            <div className="flex-1 overflow-y-auto p-6 space-y-6">
+                            <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-5 sm:space-y-6">
                                 {/* 1. Tour Schedule Highlight (The Actual Booking Date) */}
                                 <div className="p-4 rounded-2xl border-2 border-sky-100 bg-gradient-to-r from-sky-50/70 to-blue-50/40 flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-2xs">
                                     <div className="flex items-start gap-3.5">
