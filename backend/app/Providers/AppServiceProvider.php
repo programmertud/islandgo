@@ -4,6 +4,8 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\Transport\BrevoTransport;
 use App\Services\Sms\SmsServiceInterface;
 use App\Services\Sms\MockSmsProvider;
 use App\Services\Sms\SemaphoreSmsProvider;
@@ -34,6 +36,11 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Schema::defaultStringLength(191);
+
+        Mail::extend('brevo', function (array $config = []) {
+            $apiKey = $config['key'] ?? config('services.brevo.api_key') ?? env('BREVO_API_KEY', '');
+            return new BrevoTransport((string) $apiKey);
+        });
     }
 }
 
