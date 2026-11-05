@@ -792,7 +792,7 @@ export default function Bookings() {
                                                             </p>
 
                                                             {/* Verification Actions inside Receipt */}
-                                                            {!isSuperAdmin && p.status === 'submitted' && (
+                                                            {p.status === 'submitted' && (
                                                                 <div className="flex flex-wrap items-center gap-2 pt-1 justify-center sm:justify-start">
                                                                     <button
                                                                         type="button"

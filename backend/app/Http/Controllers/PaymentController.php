@@ -106,11 +106,11 @@ class PaymentController extends Controller
         return response()->json($payment, 201);
     }
 
-    // Agency Admin: verify or reject a payment
+    // Agency Admin or Super Admin: verify or reject a payment
     public function verify(Request $request, Payment $payment)
     {
         $booking = $payment->booking;
-        if ($request->user()->agency_id !== $booking->agency_id) {
+        if ($request->user()->role !== 'super_admin' && $request->user()->agency_id !== $booking->agency_id) {
             abort(403);
         }
 
@@ -263,7 +263,8 @@ class PaymentController extends Controller
         if ($user->id !== $booking->customer_id && $user->role !== 'super_admin' && $user->agency_id !== $booking->agency_id) {
             abort(403);
         }
-        abort_unless($payment->proof_of_payment_path && Storage::disk('local')->exists($payment->proof_of_payment_path), 404);
-        return Storage::disk('local')->response($payment->proof_of_payment_path);
+        $disk = Storage::disk('public')->exists($payment->proof_of_payment_path) ? 'public' : 'local';
+        abort_unless($payment->proof_of_payment_path && Storage::disk($disk)->exists($payment->proof_of_payment_path), 404);
+        return Storage::disk($disk)->response($payment->proof_of_payment_path);
     }
 }
