@@ -6,8 +6,9 @@ php artisan config:cache || true
 php artisan route:cache || true
 php artisan view:cache || true
 
-# Run database migrations
+# Run database migrations and seed default data
 php artisan migrate --force || true
+php artisan db:seed --force || true
 
 # Ensure local storage symlink exists (if local fallback is used)
 php artisan storage:link || true
