@@ -1,23 +1,19 @@
 FROM php:8.3-fpm-alpine
 
-# Install system dependencies, Nginx, tools, and PHP extensions
+# Install essential system dependencies, Nginx, and tools
 RUN apk add --no-cache \
     nginx \
     curl \
-    libpng-dev \
-    libxml2-dev \
-    zip \
-    unzip \
     git \
-    oniguruma-dev \
-    libzip-dev \
-    icu-dev \
-    linux-headers \
+    unzip \
     mysql-client \
     dos2unix \
     ca-certificates
 
-RUN docker-php-ext-install pdo pdo_mysql mbstring exif pcntl bcmath gd intl zip opcache
+# Install PHP extensions using the official pre-compiled installer
+# (Fast, reliable, avoids Alpine C compilation errors)
+COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr/local/bin/
+RUN install-php-extensions pdo_mysql mbstring exif pcntl bcmath gd intl zip opcache
 
 # Copy Composer from official image
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
