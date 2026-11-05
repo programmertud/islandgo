@@ -57,7 +57,7 @@ class PaymentController extends Controller
             'proof_of_payment' => 'required|file|mimes:jpg,jpeg,png,pdf|max:5120',
         ]);
 
-        $path = $request->file('proof_of_payment')->store('payment-proofs', 'local');
+        $path = $request->file('proof_of_payment')->store('payment-proofs', 'public');
         $amount = $isAdvance ? $booking->required_advance_amount : $booking->remaining_balance;
         $paymentType = $isAdvance ? 'advance' : 'final';
 
@@ -90,15 +90,17 @@ class PaymentController extends Controller
                 $booking->booking_reference, $request->user()->name, $paymentType
             );
 
-            // Email notification
-            app(EmailNotificationService::class)->notifyAdminPaymentSubmitted(
-                $booking,
-                $agencyAdmin->email,
-                $agencyAdmin->name,
-                $request->user()->name,
-                $paymentType,
-                $payment->amount
-            );
+            // Email notification dispatched non-blocking after response
+            dispatch(function () use ($booking, $agencyAdmin, $request, $paymentType, $payment) {
+                rescue(fn() => app(EmailNotificationService::class)->notifyAdminPaymentSubmitted(
+                    $booking,
+                    $agencyAdmin->email,
+                    $agencyAdmin->name,
+                    $request->user()->name,
+                    $paymentType,
+                    $payment->amount
+                ));
+            })->afterResponse();
         }
 
         return response()->json($payment, 201);
@@ -167,20 +169,26 @@ class PaymentController extends Controller
                 if ($booking->customer_id) {
                     NotificationService::bookingApproved($booking->customer_id, $booking->agency_id, $booking->id, $booking->booking_reference);
                 }
-                SendSmsNotification::dispatch($booking, 'payment_verified');
-                app(EmailNotificationService::class)->notifyBooking($booking, 'payment_verified');
-                SendSmsNotification::dispatch($booking, 'booking_confirmed');
-                app(EmailNotificationService::class)->notifyBooking($booking, 'booking_confirmed');
+                dispatch(function () use ($booking) {
+                    rescue(fn() => SendSmsNotification::dispatchSync($booking, 'payment_verified'));
+                    rescue(fn() => app(EmailNotificationService::class)->notifyBooking($booking, 'payment_verified'));
+                    rescue(fn() => SendSmsNotification::dispatchSync($booking, 'booking_confirmed'));
+                    rescue(fn() => app(EmailNotificationService::class)->notifyBooking($booking, 'booking_confirmed'));
+                })->afterResponse();
             } else {
-                SendSmsNotification::dispatch($booking, 'booking_completed');
-                app(EmailNotificationService::class)->notifyBooking($booking, 'booking_completed');
+                dispatch(function () use ($booking) {
+                    rescue(fn() => SendSmsNotification::dispatchSync($booking, 'booking_completed'));
+                    rescue(fn() => app(EmailNotificationService::class)->notifyBooking($booking, 'booking_completed'));
+                })->afterResponse();
             }
         } else {
             if ($booking->customer_id) {
                 NotificationService::paymentRejected($booking->customer_id, $booking->agency_id, $booking->id, $booking->booking_reference, $validated['admin_notes'] ?? null);
             }
-            SendSmsNotification::dispatch($booking, 'payment_rejected');
-            app(EmailNotificationService::class)->notifyBooking($booking, 'payment_rejected');
+            dispatch(function () use ($booking) {
+                rescue(fn() => SendSmsNotification::dispatchSync($booking, 'payment_rejected'));
+                rescue(fn() => app(EmailNotificationService::class)->notifyBooking($booking, 'payment_rejected'));
+            })->afterResponse();
         }
 
         return response()->json(['message' => 'Payment ' . $validated['status'] . '.', 'payment' => $payment]);
@@ -239,8 +247,10 @@ class PaymentController extends Controller
                 NotificationService::paymentVerified($booking->customer_id, $booking->agency_id, $booking->id, $booking->booking_reference);
                 NotificationService::bookingApproved($booking->customer_id, $booking->agency_id, $booking->id, $booking->booking_reference);
             }
-            SendSmsNotification::dispatch($booking, 'payment_verified');
-            app(EmailNotificationService::class)->notifyBooking($booking, 'payment_verified');
+            dispatch(function () use ($booking) {
+                rescue(fn() => SendSmsNotification::dispatchSync($booking, 'payment_verified'));
+                rescue(fn() => app(EmailNotificationService::class)->notifyBooking($booking, 'payment_verified'));
+            })->afterResponse();
 
             return response()->json(['message' => 'Cash advance recorded and booking confirmed.', 'payment' => $payment, 'booking' => $booking->fresh()]);
         });

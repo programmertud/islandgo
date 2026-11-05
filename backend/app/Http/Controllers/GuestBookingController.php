@@ -362,14 +362,16 @@ class GuestBookingController extends Controller
                 $booking->id
             );
 
-            app(EmailNotificationService::class)->notifyAdminPaymentSubmitted(
-                $booking,
-                $agencyAdmin->email,
-                $agencyAdmin->name,
-                $booking->guest_name ?? 'Guest',
-                'advance',
-                (float) $amount
-            );
+            dispatch(function () use ($booking, $agencyAdmin, $amount) {
+                rescue(fn() => app(EmailNotificationService::class)->notifyAdminPaymentSubmitted(
+                    $booking,
+                    $agencyAdmin->email,
+                    $agencyAdmin->name,
+                    $booking->guest_name ?? 'Guest',
+                    'advance',
+                    (float) $amount
+                ));
+            })->afterResponse();
         }
 
         return response()->json([

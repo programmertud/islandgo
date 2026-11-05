@@ -110,13 +110,6 @@ class BookingController extends Controller
                     $booking->id, $booking->booking_reference,
                     $request->user()->name
                 );
-
-                // Send email to agency admin
-                app(EmailNotificationService::class)->notifyAdminNewBooking(
-                    $booking,
-                    $agencyAdmin->email,
-                    $agencyAdmin->name
-                );
             }
 
             NotificationService::send(

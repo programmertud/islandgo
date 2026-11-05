@@ -30,6 +30,12 @@ RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
         zip \
         opcache
 
+# Configure PHP upload and execution limits for receipts, QR codes, and images
+RUN echo "upload_max_filesize = 32M" > /usr/local/etc/php/conf.d/uploads.ini \
+    && echo "post_max_size = 32M" >> /usr/local/etc/php/conf.d/uploads.ini \
+    && echo "memory_limit = 256M" >> /usr/local/etc/php/conf.d/uploads.ini \
+    && echo "max_execution_time = 120" >> /usr/local/etc/php/conf.d/uploads.ini
+
 # Copy Composer from official image
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
