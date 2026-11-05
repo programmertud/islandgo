@@ -1,34 +1,52 @@
 FROM php:8.3-fpm-alpine
 
-# Install essential system dependencies, Nginx, and tools
+# Install essential system dependencies
 RUN apk add --no-cache \
     nginx \
     curl \
     git \
     unzip \
+    zip \
+    libpng-dev \
+    libjpeg-turbo-dev \
+    freetype-dev \
+    libzip-dev \
+    icu-dev \
+    oniguruma-dev \
     mysql-client \
     dos2unix \
     ca-certificates
 
-# Install PHP extensions using the official pre-compiled installer
-# (Fast, reliable, avoids Alpine C compilation errors)
-COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr/local/bin/
-RUN install-php-extensions pdo_mysql mbstring exif pcntl bcmath gd intl zip opcache
+# Install PHP extensions (using docker-php-ext-configure for gd)
+RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
+    && docker-php-ext-install -j$(nproc) \
+        pdo_mysql \
+        mbstring \
+        exif \
+        pcntl \
+        bcmath \
+        gd \
+        intl \
+        zip \
+        opcache
 
 # Copy Composer from official image
-COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
 WORKDIR /var/www
 
+# Set composer memory limit to unlimited to avoid OOM kills on free tier
+ENV COMPOSER_MEMORY_LIMIT=-1
+
 # Copy composer definition and install dependencies
 COPY composer.json composer.lock ./
-RUN composer install --no-dev --no-scripts --no-autoloader --prefer-dist
+RUN composer install --no-dev --no-scripts --no-autoloader --prefer-dist --no-interaction
 
 # Copy the rest of the application
 COPY . .
 
 # Finish composer setup
-RUN composer dump-autoload --optimize --no-dev
+RUN composer dump-autoload --optimize --no-dev --no-interaction
 
 # Set permissions for storage and bootstrap cache
 RUN chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache \
@@ -38,7 +56,7 @@ RUN chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache \
 COPY docker/nginx.conf /etc/nginx/nginx.conf
 COPY docker/entrypoint.sh /usr/local/bin/entrypoint.sh
 
-# Fix Windows CRLF if committed from Windows and grant execute permissions
+# Fix Windows CRLF line endings and grant execute permissions
 RUN dos2unix /usr/local/bin/entrypoint.sh \
     && chmod +x /usr/local/bin/entrypoint.sh
 
