@@ -43,9 +43,9 @@ return [
     | Leave SMS_PROVIDER=mock (or unset) to only log to Laravel log files.
     */
     'semaphore' => [
-        'provider'    => env('SMS_PROVIDER', 'mock'),
-        'api_key'     => env('SEMAPHORE_API_KEY', ''),
-        'sender_name' => env('SEMAPHORE_SENDER_NAME', 'SEMAPHORE'),
+        'provider'    => env('SMS_PROVIDER', 'textbee'),
+        'api_key'     => env('SEMAPHORE_API_KEY', '7876e79a69f8d1bb215e216820b44aa2'),
+        'sender_name' => env('SEMAPHORE_SENDER_NAME', 'snsu'),
     ],
 
     /*
@@ -54,8 +54,8 @@ return [
     |--------------------------------------------------------------------------
     */
     'textbee' => [
-        'api_key'   => env('TEXTBEE_API_KEY', ''),
-        'device_id' => env('TEXTBEE_DEVICE_ID', null),
+        'api_key'   => env('TEXTBEE_API_KEY', 'txb_QzeYQK12vvdfGxSpt1D7Pq7f6iUxT4Pm'),
+        'device_id' => env('TEXTBEE_DEVICE_ID', '6ac4db172597187c9c0c7f0b'),
     ],
 
     /*
