@@ -8,10 +8,13 @@ use Illuminate\Support\Facades\Storage;
 
 class AgencyController extends Controller
 {
-    // Agency Admin: retrieve the settings that govern this agency's bookings.
+    // Agency Admin or Super Admin: retrieve the settings that govern this agency's bookings.
     public function getProfile(Request $request)
     {
         $agency = $request->user()->agency;
+        if (!$agency && $request->user()->role === 'super_admin') {
+            $agency = Agency::first();
+        }
         abort_unless($agency, 403, 'No agency is associated with this account.');
 
         return response()->json($agency);
@@ -47,10 +50,13 @@ class AgencyController extends Controller
         return response()->json(['message' => "Agency status updated to {$validated['status']}.", 'agency' => $agency]);
     }
 
-    // Agency Admin: update own agency profile
+    // Agency Admin or Super Admin: update agency profile
     public function updateProfile(Request $request)
     {
         $agency = $request->user()->agency;
+        if (!$agency && $request->user()->role === 'super_admin') {
+            $agency = Agency::first();
+        }
         abort_unless($agency, 403, 'No agency is associated with this account.');
 
         $validated = $request->validate([

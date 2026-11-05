@@ -137,7 +137,7 @@ class GuestBookingController extends Controller
                 ['booking_reference' => $booking->booking_reference, 'total_amount' => $total, 'guest' => true]
             );
 
-            // Notify agency admin (in-app only — guest has no account for in-app notifications).
+            // In-app notification for agency admin
             $agencyAdmin = User::where('agency_id', $package->agency_id)
                 ->where('role', 'agency_admin')->first();
             if ($agencyAdmin) {
@@ -146,20 +146,22 @@ class GuestBookingController extends Controller
                     $booking->id, $booking->booking_reference,
                     $validated['guest_name']
                 );
-
-                app(EmailNotificationService::class)->notifyAdminNewBooking(
-                    $booking,
-                    $agencyAdmin->email,
-                    $agencyAdmin->name
-                );
             }
 
-            // Dispatch SMS and email to guest after the transaction commits.
-            // Failures are logged by the respective jobs/services but do not
-            // roll back the committed booking.
-            SendSmsNotification::dispatch($booking, 'advance_payment_required');
-            app(EmailNotificationService::class)->notifyBooking($booking, 'booking_submitted');
-            app(EmailNotificationService::class)->notifyBooking($booking, 'advance_payment_required');
+            // Dispatch SMS and email outside the main flow after response to avoid blocking/timeouts
+            dispatch(function () use ($booking, $agencyAdmin) {
+                if ($agencyAdmin) {
+                    rescue(fn() => app(EmailNotificationService::class)->notifyAdminNewBooking(
+                        $booking,
+                        $agencyAdmin->email,
+                        $agencyAdmin->name
+                    ));
+                }
+
+                rescue(fn() => SendSmsNotification::dispatchSync($booking, 'advance_payment_required'));
+                rescue(fn() => app(EmailNotificationService::class)->notifyBooking($booking, 'booking_submitted'));
+                rescue(fn() => app(EmailNotificationService::class)->notifyBooking($booking, 'advance_payment_required'));
+            })->afterResponse();
 
             $booking->load(['schedule.package.agency']);
 

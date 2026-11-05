@@ -128,9 +128,21 @@ class BookingController extends Controller
                 'Booking',
                 $booking->id,
             );
-            SendSmsNotification::dispatch($booking, 'advance_payment_required');
-            app(EmailNotificationService::class)->notifyBooking($booking, 'booking_submitted');
-            app(EmailNotificationService::class)->notifyBooking($booking, 'advance_payment_required');
+
+            // Dispatch SMS and email outside the main flow after response to avoid blocking/timeouts
+            dispatch(function () use ($booking, $agencyAdmin) {
+                if ($agencyAdmin) {
+                    rescue(fn() => app(EmailNotificationService::class)->notifyAdminNewBooking(
+                        $booking,
+                        $agencyAdmin->email,
+                        $agencyAdmin->name
+                    ));
+                }
+
+                rescue(fn() => SendSmsNotification::dispatchSync($booking, 'advance_payment_required'));
+                rescue(fn() => app(EmailNotificationService::class)->notifyBooking($booking, 'booking_submitted'));
+                rescue(fn() => app(EmailNotificationService::class)->notifyBooking($booking, 'advance_payment_required'));
+            })->afterResponse();
 
             return response()->json($booking->load('schedule.package'), 201);
         });

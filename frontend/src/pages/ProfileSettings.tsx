@@ -24,8 +24,10 @@ export default function ProfileSettings() {
     const [qrCodePreview, setQrCodePreview] = useState<string>('');
     const [removeQrCode, setRemoveQrCode] = useState(false);
 
+    const canManageAgency = user?.role === 'agency_admin' || user?.role === 'super_admin';
+
     useEffect(() => {
-        if (user?.role === 'agency_admin') apiClient.get('/agency/profile').then(response => {
+        if (canManageAgency) apiClient.get('/agency/profile').then(response => {
             setDeadlineHours(response.data.advance_payment_deadline_hours?.toString() ?? '');
             setGcashNumber(response.data.gcash_number ?? '');
             setGcashAccountName(response.data.gcash_account_name ?? '');
@@ -35,7 +37,7 @@ export default function ProfileSettings() {
                 setQrCodePreview(storageUrl(response.data.payment_qr_code_path));
             }
         }).catch(() => undefined);
-    }, [user?.role]);
+    }, [user?.role, canManageAgency]);
 
     const chooseAvatar = (file?: File) => {
         if (!file) return;
@@ -146,7 +148,7 @@ export default function ProfileSettings() {
                 <button disabled={saving} className="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-sky-600 hover:bg-sky-700 disabled:opacity-60 text-white font-bold shadow-sm"><>{saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}</> {saving ? 'Saving...' : 'Save profile'}</button>
             </form>
         </div>
-        {user?.role === 'agency_admin' && (
+        {canManageAgency && (
             <form onSubmit={saveGcash} className="mt-6 rounded-3xl border border-slate-200 bg-white p-6 shadow-sm md:p-8 space-y-6">
                 <div>
                     <div className="flex items-center gap-2">
@@ -289,7 +291,7 @@ export default function ProfileSettings() {
                 </div>
             </form>
         )}
-        {user?.role === 'agency_admin' && <form onSubmit={saveDeadline} className="mt-6 rounded-3xl border border-slate-200 bg-white p-6 shadow-sm md:p-8">
+        {canManageAgency && <form onSubmit={saveDeadline} className="mt-6 rounded-3xl border border-slate-200 bg-white p-6 shadow-sm md:p-8">
             <p className="text-xs font-bold uppercase tracking-[0.18em] text-sky-700">Booking policy</p>
             <h2 className="mt-2 text-xl font-extrabold text-slate-900">Advance payment deadline</h2>
             <p className="mt-1 text-sm text-slate-600">A temporary tour-slot hold is released when an unpaid 50% advance reaches this deadline. Choose disabled to keep the existing manual follow-up process.</p>
